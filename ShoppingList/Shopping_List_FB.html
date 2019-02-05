@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<style>
+
+		@import url(https://fonts.googleapis.com/css?family=Playfair+Display:900|Dosis);
+
+		#topMenu {
+				width: 700px;
+				margin-left: auto;
+				margin-right: auto;
+				background-color: #7dd1be;
+				height: 150px;
+				border-radius: 20px;
+				font-family: dosis;			
+			}
+
+			#shopItems {
+				width: 700px;
+				margin-top: 30px;
+				margin-left: auto;
+				margin-right: auto;
+				background-color: #dbd7d2;
+				height: 150px;
+				box-shadow: 0 0 0 .4em #7dd1be; 
+				border-radius: .8em;
+				font-family: dosis;
+								
+			}
+			
+			#shoppingList {
+				margin-left: auto;
+				margin-right: auto;
+				text-align: center;
+				font-family: dosis;
+			}
+
+			#addItemBtn{
+				height: auto;
+				width: 80px;
+				background-color: green;
+				color: white;
+				border-radius: 5px;
+				float: right;
+				margin-right: 150px;
+				border: none;
+				border-radius: 10px;
+				font-family: dosis;
+				outline: none;
+				cursor: pointer;
+			}
+
+			#saddItemBtn:active {
+				background-color: green;
+				box-shadow: 0 3px #666;
+				transform: translateY(2px);
+			}
+
+			#sortAscBtn {
+				background-color: purple;
+				color: white;
+				float: left;
+				margin-left: 120px;
+				border-radius: 5px;
+				margin-bottom: 25px;
+				font-family: dosis;
+				border: none;
+				border-radius: 10px;
+				outline: none;
+				cursor: pointer;
+			}
+
+			#sortAscBtn:active {
+				background-color: purple;
+				box-shadow: 0 3px #666;
+				transform: translateY(2px);
+			}
+
+			#sortDscBtn {
+				background-color: purple;
+				color: white;
+				float: right;
+				margin-right: 120px;
+				border-radius: 5px;
+				margin-bottom: 25px;
+				font-family: dosis;
+				border: none;
+				border-radius: 10px;
+				outline: none;
+				background-image: none;
+				cursor: pointer;
+			}
+
+			#sortDscBtn:active {
+				background-color: purple;
+				box-shadow: 0 3px #666;
+				transform: translateY(2px);
+			}
+
+			#item {
+				width: 200px;
+				border-radius: 10px;
+				margin-right: 30px;
+				float: left;
+				margin-left: 200px;
+				border:none;
+				background-color: #eaecef;
+				cursor: text;
+				font-family: dosis;
+			}
+			.deleteBtn{
+				background-image: none;
+				background-color: transparent;
+				border: none;
+				outline: none;
+				cursor: pointer;
+			}
+
+			.deleteBtn:active {
+				transform: translateY(2px);
+			}
+
+			.editBtn {
+				background-image: none;
+				background-color: transparent;
+				border: none;
+				outline: none;
+				cursor: pointer;
+			}
+
+			.editBtn:active {
+
+				transform: translateY(2px);
+			}
+
+			.markBtn {
+				background-image: none;
+				background-color: transparent;
+				border: none;
+				outline: none;
+				cursor: pointer;
+			}
+
+			.markBtn:active {
+
+				transform: translateY(2px);
+			}
+
+			.newItem {
+				text-decoration: none;
+			}
+
+			.newItem.buyed {
+				text-decoration: line-through;
+			}
+
+			body {
+				background-color: black;
+			}
+
+		</style>
+	<script>
+		var element = [];
+
+		function getElement() {
+			//functie care preia din firebase lista de persoane
+			var xhttp = new XMLHttpRequest();
+			xhttp.onreadystatechange = function () {
+				if (this.readyState == 4 && this.status == 200) {
+					//readyState 4 inseamna s-a finalizat requestul
+					//status 200 inseamna s-a finalizat cu succes (fara eroare)
+					// Typical action to be performed when the document is ready:
+
+					element = JSON.parse(this.responseText);
+					//this.responseText este continutul raspunsului; !! ca String
+					//JSON.parse transforma din text/String in JSON (obiecte, liste, numere, etc)
+					deseneazaTabel();
+				}
+			};
+			xhttp.open("GET", "https://shopping-list-ed794.firebaseio.com/.json", true);
+			xhttp.send();
+		}
+
+		var indexEditare = -1;
+		console.log(element);
+
+		function deseneazaTabel() {
+			var str = "";
+			for (var i in element) {
+				str += `<tr>
+								<td id="newItem${i}" class="newItem" style="column-width: 400px">${element[i].nume}</td>
+								<td>
+									<button class="markBtn" onclick="marcheaza('${i}');" title="Mark"><img src="https://image.flaticon.com/icons/svg/62/62683.svg" height="20" width="20";></button>
+									<button class="editBtn" onclick="editeaza('${i}');" title="Edit"><img src="http://cdn.onlinewebfonts.com/svg/img_386644.png" height="20" width="20";></button>
+									<button class="deleteBtn" onclick="sterge('${i}');" title="Delete"><img src="http://cdn.onlinewebfonts.com/svg/img_304350.png" height="20" width="20";></button>
+								</td>
+								
+							</tr>`;
+			}
+
+
+			console.log(str);
+			document.querySelector("table tbody").innerHTML = str;
+		}
+
+		function sortTable() {
+			var table, rows, switching, i, x, y, shouldSwitch;
+			table = document.getElementById("myTable");
+			switching = true;
+			/* Make a loop that will continue until
+			no switching has been done: */
+			while (switching) {
+				// Start by saying: no switching is done:
+				switching = false;
+				rows = table.rows;
+				/* Loop through all table rows (except the
+				first, which contains table headers): */
+				for (i = 1; i < (rows.length - 1); i++) {
+					// Start by saying there should be no switching:
+					shouldSwitch = false;
+					/* Get the two elements you want to compare,
+					one from current row and one from the next: */
+					x = rows[i].getElementsByTagName("TD")[0];
+					y = rows[i + 1].getElementsByTagName("TD")[0];
+					// Check if the two rows should switch place:
+					if (x.innerHTML.toLowerCase() > y.innerHTML.toLowerCase()) {
+						// If so, mark as a switch and break the loop:
+						shouldSwitch = true;
+						break;
+					}
+				}
+				if (shouldSwitch) {
+					/* If a switch has been marked, make the switch
+					and mark that a switch has been done: */
+					rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
+					switching = true;
+				}
+			}
+		}
+		
+		function adauga(t, event) {
+
+			var name = document.querySelector('#item');
+
+			event.preventDefault();
+
+			if (name.value.length < 1) {
+
+				alert("Please add an item");
+
+				return
+			};
+
+
+			/*var pers = {};
+			pers.nume = t.querySelector("[name=nume]").value;
+			pers["prenume"]=t.querySelector("[name=prenume]").value;
+			pers.telefon=t.querySelector("[name=telefon]").value;
+			
+			var pers = {
+				nume: t.querySelector("[name=nume]").value,
+				prenume:t.querySelector("[name=prenume]").value,
+				telefon:t.querySelector("[name=telefon]").value
+			};
+			*/
+
+			var item = {};
+			var inputs = t.querySelectorAll("input[name]");
+			for (var i = 0; i < inputs.length; i++) {
+				var a = inputs[i].getAttribute("name");
+				var v = inputs[i].value;
+				item[a] = v;
+
+			}
+			if (indexEditare === -1) {
+				var xhttp = new XMLHttpRequest();
+				xhttp.onreadystatechange = function () {
+					if (this.readyState == 4 && this.status == 200) {
+						getElement();
+					}
+				};
+				xhttp.open("POST", "https://shopping-list-ed794.firebaseio.com/.json", true);
+				xhttp.send(JSON.stringify(item));
+			} else {
+				var xhttp = new XMLHttpRequest();
+				xhttp.onreadystatechange = function () {
+					if (this.readyState == 4 && this.status == 200) {
+						getElement();
+					}
+				};
+				xhttp.open("PUT", `https://shopping-list-ed794.firebaseio.com/${indexEditare}.json`, true);
+				xhttp.send(JSON.stringify(item));
+				indexEditare = -1;
+			}
+			//document.getElementById("elemInList").classList.add('MyClass');
+			//document.getElementById("elemInList").className = "newItem";
+			deseneazaTabel();
+			t.reset();
+		}
+
+		function sterge(idx) {
+
+			if (confirm("Do you want to delete this contact?")) {
+
+				//cand stergem; trebuie sa modificam baza de date si apoi sa preluam noile informatii de pe server
+				var xhttp = new XMLHttpRequest();
+				xhttp.onreadystatechange = function () {
+					if (this.readyState == 4 && this.status == 200) {
+						// Typical action to be performed when the document is ready:
+						//cand s-a finalizat cu succes requestul, apelez getPersoane pentru a prelua din nou de pe server lista de persoane
+						//dupa ce se preia, se apeleaza iar deseneaza tabel ca sa imi actualizeze interfata
+						getElement();
+					}
+				};
+				//se foloseste DELETE in loc de GET
+				//Am schimbat din "" in `` pentru a putea sa inserez cu ${} informatii din javascript in TEXT
+				//in cazul nostru, indexul elementului care il sterg;
+				xhttp.open("DELETE", `https://shopping-list-ed794.firebaseio.com/${idx}.json`, true);
+				//IMPORTANT; .json trebuie sa fie mereu prezent;
+				//Daca nu inseram ${idx} inainte de .json, as fi sters toata baza de date
+				xhttp.send();
+			}
+		}
+
+		function editeaza(idx) {
+			var elem = element[idx];
+			var inputs = document.querySelectorAll("#formAdaugare input[name]");
+			for (var i = 0; i < inputs.length; i++) {
+				var a = inputs[i].getAttribute("name");
+				inputs[i].value = elem[a];
+			}
+			console.log(idx, elem);
+			indexEditare = idx;
+		}
+
+		function marcheaza(idx) {
+
+			var elem = element[idx];
+
+			if (document.getElementById(`newItem${idx}`).style.textDecoration != "line-through") {
+				document.getElementById(`newItem${idx}`).style.textDecoration = "line-through";
+			}
+			else {
+				document.getElementById(`newItem${idx}`).style.textDecoration = "none";
+			}
+		}
+
+
+	</script>
+</head>
+
+<body onload="getElement();">
+	<div id="topMenu">
+		<h1 id="shoppingList" style="font-weight: bold;">Shopping List</h1>
+		<form id="formAdaugare" onsubmit="adauga(this,event)" style="padding: 20px;">
+			<input name="nume" type="text" id="item" placeholder="  Add Item..." />
+			<input type="submit" id="addItemBtn" value="Add Item"><br><br>
+			<input type="button" id="sortAscBtn" value="Sortare asc" onclick="sortTable()">
+			<input type="button" id="sortDscBtn" value="Sortare desc" onclick="sortTable()">
+		</form>
+	</div>
+
+	<div id="shopItems">
+		<table>
+			<thead>
+				<tr>
+					<td onclick="sortare('nume')"><b>Shoplist Item</b></td>
+					<td></td>
+				</tr>
+			</thead>
+			<tbody>
+			</tbody>
+		</table>
+	</div>
+</body>
+
+</html>

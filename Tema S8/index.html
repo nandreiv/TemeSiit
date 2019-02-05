@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+  <title>Catalog Note</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+  <div id="main_screen">
+    <div id="main_catalog">
+      <div id="lista_elevi_wrapper">
+        <h1>Catalog Note Online</h1>
+        <form id="addStudent" onsubmit="addStudent()">
+          <label for="name">Nume student :</label>
+          <input type="text" name="name" id="numeStudent">
+          <button type="button" id="addStudentBtn" onclick="addStudent();">Adauga Student</button>
+        </form>
+        <div id="catalogGeneral">
+
+        </div>
+      </div>
+      <div id="note_elev_wrapper">
+        <button id="sortAsc">Sorteaza ascendent dupa medie</button><br>
+        <button id="sortDesc">Sorteaza descendent dupa medie</button>
+        <table id="tabelGeneral">
+          <tr>
+            <td><b>Nume</b></td>
+            <td><b>Medie</b></td>
+            <td></td>
+          </tr>
+        </table>
+      </div>
+    </div>
+
+    <div id="ins_catalog">
+      <div id="note_individuale">
+        <h1 id="numeNota">Nota elev : </h1>
+        <form id="addNota">
+          <label for="nameIns">Nota :</label>
+          <input type="text" name="nameIns" id="numeStudentIns">
+          <button type="button" id="addStudentMarkBtn" onclick="addGrade();">Adauga Nota</button>
+        </form>
+      </div>
+      <button id="hideGrades" onclick="hideIns()">Ascunde note</button>
+      <div id="note_elev_ins">
+        <button id="sortAsc">Sorteaza ascendent dupa medie</button><br>
+        <button id="sortDesc">Sorteaza descendent dupa medie</button>
+        <h4>Note</h4>
+        <table id="tabelNote">
+        </table>
+      </div>
+    </div>
+  </div>
+
+
+  <script src="script.js"></script>
+</body>
+
+</html>

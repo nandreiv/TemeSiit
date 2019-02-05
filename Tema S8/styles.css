@@ -1,0 +1,175 @@
+@import url('https://fonts.googleapis.com/css?family=Raleway');
+
+html, body {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background: url("https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSYihoKV59DTUmwThCkPXk-sffIRU04l72RTkdSMKbFuZ3Uhub2");
+  background-size: stretch;
+}
+
+#lista_elevi_wrapper {
+  font-family: 'Raleway', sans-serif;
+  width: 90%;
+}
+
+#lista_elevi_wrapper h1 {
+  margin-left: 10px;
+}
+
+#note_individuale {
+  font-family: 'Raleway', sans-serif;
+  width: 90%;
+}
+
+#note_individuale h1 {
+  margin-left: 10px;
+}
+
+#addStudent {
+  display: flex;
+  width: 100%;
+  border: 1px solid #906133;
+  padding: 10px;
+  margin-left: 10px;
+}
+
+#addNota {
+  display: flex;
+  width: 100%;
+  border: 1px solid #906133;
+  padding: 10px;
+  margin-left: 10px;
+}
+
+#numeStudent {
+  margin-left: 20px;
+}
+
+#numeStudentIns {
+  margin-left: 20px;
+}
+
+#addStudentBtn {
+  margin-left: 20px;
+  font-family: 'Raleway', sans-serif;
+  background-color: #906133;
+  color: #000;
+  border: 1px solid rgb(124, 13, 13);
+  border-radius: 5px;
+}
+
+#addNotaBtn {
+  margin-left: 20px;
+  font-family: 'Raleway', sans-serif;
+  background-color: #906133;
+  color: black;
+  border: 1px solid rgb(124, 13, 13);
+  border-radius: 5px;
+}
+
+#addStudentBtn:hover {
+  cursor: pointer;
+}
+
+#note_elev_wrapper {
+  min-height: 350px;
+  margin-top: 30px;
+  border: 1px solid #906133;
+  width: 90%;
+  padding: 10px;
+  margin-left: 10px;
+}
+
+#note_elev_ins {
+  min-height: 350px;
+  margin-top: 5px;
+  border: 1px solid #906133;
+  width: 90%;
+  padding: 10px;
+  margin-left: 10px;
+}
+
+#sortAsc {
+  margin-bottom: 5px;
+  width: 220px;
+  background-color: #906133;
+  color: black;
+  border: 1px solid rgb(124, 13, 13);
+  border-radius: 5px;
+}
+
+#sortDesc {
+  width: 220px;
+  background-color: #906133;
+  color: black;
+  border: 1px solid rgb(124, 13, 13);
+  border-radius: 5px;
+}
+
+#tabelGeneral {
+  margin-top: 20px;
+  font-family: 'Raleway', sans-serif;
+  width: 100%;
+}
+
+#tabelGeneral thead {
+  font-weight: bold;
+}
+
+#main_screen {
+  display: flex;
+  width: 100%;
+}
+
+#main_catalog {
+  width: 100%;
+  float: left;
+  transition: width 0.5s;
+}
+
+.showMarksBtn {
+  margin-left: 20px;
+  font-family: 'Raleway', sans-serif;
+  background-color: #906133;
+  color: black;
+  border: 1px solid rgb(124, 13, 13);
+  border-radius: 5px;
+}
+
+#addStudentMarkBtn {
+  font-family: 'Raleway', sans-serif;
+  background-color: #906133;
+  color: black;
+  border: 1px solid rgb(124, 13, 13);
+  border-radius: 5px;
+  margin-left: 10px;
+}
+
+#ins_catalog {
+  font-family: 'Raleway', sans-serif;
+  width: 0%;
+  transition: width 0.5s;
+}
+
+#hideGrades {
+  margin:0;
+  margin-left: 10px;
+  margin-top: 5px;
+  font-family: 'Raleway', sans-serif;
+  background-color: #C67171;
+  color: black;
+  border: 1px solid rgb(124, 13, 13);
+  border-radius: 5px;
+}
+
+#addNota {
+  display: flex;
+  width: 100%;
+  border: 1px solid #906133;
+  padding: 10px;
+  margin-left: 10px;
+  margin-right: 10px;
+}

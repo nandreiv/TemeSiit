@@ -93,6 +93,7 @@
 					produse = JSON.parse(this.responseText);
 					//this.responseText este continutul raspunsului; !! ca String
 					//JSON.parse transforma din text/String in JSON (obiecte, liste, numere, etc)
+					console.log(produse);
 					deseneazaTabel();
 				}
 			};
@@ -106,6 +107,7 @@
 
 			for (var i = 0; i < produse.length; i++) { //Iteram prin input pentru a citi valorile introduse
 
+				if (produse[i] != null) {
 				//Acest "if" determina cu ce anume va fi populat "str". Daca search box este gol afiseaza tot
 				//Daca search box contine ceva, se vor afisa elementele din lista care contin ce este in search box
 				if (produse[i].ingrediente.indexOf(document.getElementById("searchplace").value) > -1) {
@@ -119,6 +121,7 @@
 									</td>
 								</tr>`;
 				}
+			}
 			}
 			//Populam tbody din table cu stringul populat mai sus cu datele din input
 			document.querySelector("table tbody").innerHTML = str;

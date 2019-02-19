@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <style>
+
+    #menuAdauga {
+      width: 80%;
+      min-height: 450px;
+      margin: auto;
+      background-color: #DEB887;
+      display: flex;
+      flex-direction: column;
+      border-radius: 25px;
+
+    }
+
+    #menuAdauga textarea {
+      min-height: 35px;
+      width: 100%;
+      border: none;
+      border-radius: 5px;
+      margin: 10px;
+      box-sizing: border-box;
+    }
+
+    #menuAdauga div {
+      max-width: 100%;
+      display: flex;
+      margin-left: 20px;
+    }
+
+    #menuAdauga p {
+      width: 140px;
+      font-weight: bold;
+    }
+
+    #menuAdauga h1 {
+      margin-left: 25px;
+    }
+
+    #adaugaBtn {
+      width: 120px;
+      height: 35px;
+      margin: auto;
+      border: none;
+      border-radius: 10px;
+      background-color: #023c44;
+      outline: none;
+      cursor: pointer;
+      color: antiquewhite;
+    }
+
+		#adaugaBtn:active {
+				box-shadow: 0 3px #666;
+				transform: translateY(2px);
+			}
+
+    #loadImg {
+      width: 60px;
+      height: 60px;
+      background-color: transparent;
+      margin: auto;
+      visibility: hidden;
+    }  
+
+
+
+  </style>
+
+  <script>
+
+    var produs = [];
+
+    function getProdus() {
+      //functie care preia din firebase lista de persoane
+      var xhttp = new XMLHttpRequest();
+      xhttp.onreadystatechange = function () {
+        if (this.readyState == 4 && this.status == 200) {
+          //readyState 4 inseamna s-a finalizat requestul
+          //status 200 inseamna s-a finalizat cu succes (fara eroare)
+          // Typical action to be performed when the document is ready:
+
+          produs = JSON.parse(this.responseText);
+          //this.responseText este continutul raspunsului; !! ca String
+          //JSON.parse transforma din text/String in JSON (obiecte, liste, numere, etc)
+          deseneazaTabel();
+          console.log(produs);
+        }
+      };
+      xhttp.open("GET", `https://meniu-restaurant.firebaseio.com/.json`, true);
+      xhttp.send();
+
+    };
+
+    console.log(produs);
+    var indexEditare = -1;
+
+    var idx = window.location.search.substring(4);
+
+    function deseneazaTabel() {
+      document.getElementById("numePreparat").value = produs[idx].nume;
+      document.getElementById("pozaPreparat").value = produs[idx].imagine;
+      document.getElementById("ingredientePreparat").innerHTML = produs[idx].ingrediente;
+      document.getElementById("modPreparat").innerHTML = produs[idx].reteta;
+    }
+
+    var idx = window.location.search.substring(4);
+
+    function editeaza(idx) {
+
+      var item = {};
+      var inputs = document.querySelectorAll("textarea[name]");
+
+      for (var i = 0; i < inputs.length; i++) {
+        var a = inputs[i].getAttribute("name");
+        var v = inputs[i].value;
+        item[a] = v;
+
+      }
+
+      var xhttp = new XMLHttpRequest();
+      xhttp.onreadystatechange = function () {
+        if (this.readyState == 4 && this.status == 200) {
+          getProdus();
+        }
+      };
+      xhttp.open("PUT", `https://meniu-restaurant.firebaseio.com/${idx}.json`, true);
+      xhttp.send(JSON.stringify(item));
+      
+      document.getElementById("loadImg").style.visibility = "visible";
+
+      setTimeout(function(){
+       window.location='file:///home/andrei/Documents/FED%20Curs/FED%2012-06/Menu%20Admin/admin.html';}, 2000);
+      
+    }
+
+  </script>
+</head>
+
+<body onload="getProdus();">
+
+  <div id="menuAdauga">
+
+    <h1>Cald si Bun (Admin) - Modifica produs</h1>
+
+    <div id="inputNume">
+      <p>Nume :</p>
+      <textarea id="numePreparat" name="nume"></textarea>
+    </div>
+
+    <div id="inputPoza">
+      <p>Poza : </p>
+      <textarea id="pozaPreparat" name="imagine"></textarea>
+    </div>
+
+    <div id="inputIngrediente">
+      <p>Ingrediente :</p>
+      <textarea id="ingredientePreparat" name="ingrediente"></textarea>
+    </div>
+
+    <div id="inputPreparat">
+      <p>Mod preparare :</p>
+      <textarea id="modPreparat" name="reteta"></textarea>
+    </div>
+
+    <button type="submit" id="adaugaBtn" onclick="editeaza(idx);">Modifica Produs</button>
+
+    <img id="loadImg" src="https://mir-s3-cdn-cf.behance.net/project_modules/disp/35771931234507.564a1d2403b3a.gif">
+
+  </div>
+</body>
+
+</html>

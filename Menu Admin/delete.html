@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <style>
+    #menuAdauga {
+      width: 80%;
+      height: 400px;
+      margin: auto;
+      background-color: aquamarine;
+      display: flex;
+      flex-direction: column;
+      border-radius: 25px;
+
+    }
+
+    #menuAdauga input,
+    textarea {
+      height: 35px;
+      width: 70%;
+      border: none;
+      border-radius: 5px;
+      margin: 10px;
+    }
+
+    #menuAdauga div {
+      width: 100%;
+      display: flex;
+      margin-left: 20px;
+    }
+
+    #menuAdauga p {
+      width: 130px;
+      font-weight: bold;
+    }
+
+    #menuAdauga h1 {
+      margin-left: 25px;
+    }
+
+    #menuAdauga h3 {
+      margin-left: 25px;
+    }
+
+    #confirmaStergere {
+      width: 120px;
+      height: 50px;
+      margin: auto;
+      border: none;
+      border-radius: 10px;
+      background-color: #02662f;
+      outline: none;
+      cursor: pointer;
+      color: antiquewhite;
+    }
+
+    #confirmaStergere:active {
+      box-shadow: 0 3px #666;
+      transform: translateY(2px);
+    }
+
+    #anuleazaStergere {
+      width: 120px;
+      height: 50px;
+      margin: auto;
+      border: none;
+      border-radius: 10px;
+      background-color: #9c1414;
+      outline: none;
+      cursor: pointer;
+      color: antiquewhite;
+    }
+
+    #anuleazaStergere:active {
+      box-shadow: 0 3px #666;
+      transform: translateY(2px);
+    }
+
+    #butoane button {
+      padding: 10px;
+      margin: 10px;
+    }
+  </style>
+
+  <script>
+
+    var produs = [];
+
+    function getProdus() {
+			//functie care preia din firebase lista de persoane
+			var xhttp = new XMLHttpRequest();
+			xhttp.onreadystatechange = function () {
+				if (this.readyState == 4 && this.status == 200) {
+					//readyState 4 inseamna s-a finalizat requestul
+					//status 200 inseamna s-a finalizat cu succes (fara eroare)
+					// Typical action to be performed when the document is ready:
+
+					produs = JSON.parse(this.responseText);
+					//this.responseText este continutul raspunsului; !! ca String
+					//JSON.parse transforma din text/String in JSON (obiecte, liste, numere, etc)
+					deseneazaTabel();
+          console.log(produs);
+				}
+			};
+			xhttp.open("GET", `https://meniu-restaurant.firebaseio.com/.json`, true);
+			xhttp.send();
+      
+		};
+    
+    
+
+    function deseneazaTabel() {
+			document.getElementById("produsSters").innerHTML = "Esti pe cale sa stergi produsul : " + produs[idx].nume;
+    };
+
+    var idx = window.location.search.substring(4);
+    console.log(idx);
+
+    function sterge(idx) {
+
+      if (confirm("Do you want to delete this contact?")) {
+
+        //cand stergem; trebuie sa modificam baza de date si apoi sa preluam noile informatii de pe server
+        var xhttp = new XMLHttpRequest();
+        xhttp.onreadystatechange = function () {
+          if (this.readyState == 4 && this.status == 200) {
+            // Typical action to be performed when the document is ready:
+            //cand s-a finalizat cu succes requestul, apelez getPersoane pentru a prelua din nou de pe server lista de persoane
+            //dupa ce se preia, se apeleaza iar deseneaza tabel ca sa imi actualizeze interfata
+            getProdus();
+          }
+        };
+        //se foloseste DELETE in loc de GET
+        //Am schimbat din "" in `` pentru a putea sa inserez cu ${} informatii din javascript in TEXT
+        //in cazul nostru, indexul elementului care il sterg;
+        xhttp.open("DELETE", `https://meniu-restaurant.firebaseio.com/${idx}.json`, true);
+        //IMPORTANT; .json trebuie sa fie mereu prezent;
+        //Daca nu inseram ${idx} inainte de .json, as fi sters toata baza de date
+        xhttp.send();
+      }
+    };
+
+  </script>
+</head>
+
+<body onload="getProdus();">
+  <div id="menuAdauga">
+
+    <h1>Cald si Bun (Admin) - Sterge produs</h1>
+
+    <h3 id="produsSters"></h3>
+    <h3>Doresti sa continui ?</h3>
+
+    <div id="butoane">
+      <button id="confirmaStergere" onclick="sterge(idx)">Confirma Stergerea</button>
+      <button id="anuleazaStergere" onclick="window.location='file:///home/andrei/Documents/FED%20Curs/FED%2012-06/Menu%20Admin/admin.html'">Anuleaza
+        Stergerea</button>
+    </div>
+
+</body>
+
+</html>

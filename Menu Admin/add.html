@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <style>
+
+    #menuAdauga {
+      width: 80%;
+      min-height: 450px;
+      margin: auto;
+      background-color: #DEB887;
+      border-radius: 25px;
+      display: flex;
+      flex-direction: column;
+
+    }
+
+    #menuAdauga textarea {
+      min-height: 35px;
+      width: 100%;
+      border: none;
+      border-radius: 5px;
+      margin: 10px;
+      box-sizing: border-box;
+    }
+
+    #menuAdauga div {
+      max-width: 100%;
+      display: flex;
+      margin-left: 20px;
+    }
+
+    #menuAdauga p {
+      width: 140px;
+      font-weight: bold;
+    }
+
+    #menuAdauga h1 {
+      margin-left: 25px;
+    }
+
+    #adaugaBtn {
+      width: 120px;
+      height: 35px;
+      margin: auto;
+      border: none;
+      border-radius: 10px;
+      background-color: blue;
+      outline: none;
+      cursor: pointer;
+      color: black;
+    }
+
+		#adaugaBtn:active {
+				box-shadow: 0 3px #666;
+				transform: translateY(2px);
+			}
+
+    #loadImg {
+      width: 60px;
+      height: 60px;
+      background-color: transparent;
+      margin: auto;
+      visibility: hidden;
+    }  
+
+    #adaugaProdus {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+    }
+
+
+
+  </style>
+
+  <script>
+
+    var produs = [];
+
+    function getProdus() {
+      //functie care preia din firebase lista de persoane
+      var xhttp = new XMLHttpRequest();
+      xhttp.onreadystatechange = function () {
+        if (this.readyState == 4 && this.status == 200) {
+          //readyState 4 inseamna s-a finalizat requestul
+          //status 200 inseamna s-a finalizat cu succes (fara eroare)
+          // Typical action to be performed when the document is ready:
+
+          produs = JSON.parse(this.responseText);
+          //this.responseText este continutul raspunsului; !! ca String
+          //JSON.parse transforma din text/String in JSON (obiecte, liste, numere, etc)
+          //deseneazaTabel();
+          console.log(produs);
+        }
+      };
+      xhttp.open("GET", `https://meniu-restaurant.firebaseio.com/.json`, true);
+      xhttp.send();
+
+    };
+
+    console.log(produs);
+
+    var indexEditare = -1;
+
+    function adauga(t, event) {
+
+      event.preventDefault();
+
+      var item = {};
+      var inputs = t.querySelectorAll("textarea[name]");
+
+      for (var i = 0; i < inputs.length; i++) {
+        var a = inputs[i].getAttribute("name");
+        var v = inputs[i].value;
+        item[a] = v;
+      }
+
+      console.log(item);
+      console.log(produs.length);
+
+      if (indexEditare === -1) {
+        var xhttp = new XMLHttpRequest();
+        xhttp.onreadystatechange = function () {
+          if (this.readyState == 4 && this.status == 200) {
+            getProdus();
+          }
+        };
+        xhttp.open("POST", `https://meniu-restaurant.firebaseio.com/.json`, true);
+        xhttp.send(JSON.stringify(item));
+      }
+      else {
+        var xhttp = new XMLHttpRequest();
+        xhttp.onreadystatechange = function () {
+          if (this.readyState == 4 && this.status == 200) {
+            getProdus();
+          }
+        };
+        xhttp.open("PUT", `https://meniu-restaurant.firebaseio.com/${indexEditare}.json`, true);
+        xhttp.send(JSON.stringify(item));
+        indexEditare = -1;
+      }
+
+      /*Atunci cand avem date ce trebuiesc introduse in agenda, DIV-ul ce contine
+        contactele va fi afisat */
+      t.reset();
+
+      document.getElementById("loadImg").style.visibility = "visible";
+
+      setTimeout(function () {
+        window.location = 'file:///home/andrei/Documents/FED%20Curs/FED%2012-06/Menu%20Admin/admin.html';
+      }, 2000);
+    }
+
+  </script>
+</head>
+
+<body onload="getProdus();">
+
+  <div id="menuAdauga">
+
+    <form id="adaugaProdus" onsubmit="adauga(this,event)">
+
+      <h1>Cald si Bun (Admin) - Adauga Produs</h1>
+
+      <div id="inputNume">
+        <p>Nume :</p>
+        <textarea id="numePreparat" name="nume"></textarea>
+      </div>
+
+      <div id="inputPoza">
+        <p>Poza : </p>
+        <textarea id="pozaPreparat" name="imagine"></textarea>
+      </div>
+
+      <div id="inputIngrediente">
+        <p>Ingrediente :</p>
+        <textarea id="ingredientePreparat" name="ingrediente"></textarea>
+      </div>
+
+      <div id="inputPreparat">
+        <p>Mod preparare :</p>
+        <textarea id="modPreparat" name="reteta"></textarea>
+      </div>
+
+      <button type="submit" id="adaugaBtn" value="Adauga Produs">Adauga Produs</button>
+
+    </form>
+
+    <img id="loadImg" src="https://mir-s3-cdn-cf.behance.net/project_modules/disp/35771931234507.564a1d2403b3a.gif">
+
+  </div>
+</body>
+
+</html>
